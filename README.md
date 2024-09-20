@@ -21,8 +21,10 @@
    ```bash
    npm install
    
-2. **Запустите проект**:
+4. **Запустите проект**:
   Для запуска приложения используйте следующую команду:
    ```bash
    npm start
 
+ **Demo**: https://bucolic-selkie-4a2e53.netlify.app/
+ 
