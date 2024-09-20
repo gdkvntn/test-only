@@ -60,20 +60,22 @@ export const HistoricalDates: React.FC = () => {
     const rotationAngle = nextIndex * anglePerSlide;
     setRotateAngle(rotationAngle);
 
-    gsap.to(circleRef.current, {
-      rotation: -rotationAngle,
-      duration: 1,
-      ease: "power2.inOut",
-      onComplete: () => {
-        const textRef = circleTextRefs.current[nextIndex];
+    if (circleRef.current) {
+      gsap.to(circleRef.current, {
+        rotation: -rotationAngle,
+        duration: 1,
+        ease: "power2.inOut",
+        onComplete: () => {
+          const textRef = circleTextRefs.current[nextIndex];
 
-        gsap.to(textRef, {
-          scale: 1,
-          delay: 0,
-          ease: "power2.inOut",
-        });
-      },
-    });
+          gsap.to(textRef, {
+            scale: 1,
+            delay: 0,
+            ease: "power2.inOut",
+          });
+        },
+      });
+    }
   };
 
   const prevSlide = () => {
@@ -90,24 +92,29 @@ export const HistoricalDates: React.FC = () => {
         slides[prevSlideKey].numbers[1],
         setSecondNumber
       );
-      gsap.to(mobileTextRef.current, {
-        opacity: 0,
-        y: 20,
-        duration: 0.5,
-        ease: "power2.in",
-      });
 
-      gsap.to(swiperRef.current, {
-        opacity: 0,
-        y: 20,
-        duration: 0.5,
-        ease: "power2.in",
-        onComplete: () => {
-          setCurrentSlide(prevSlideKey);
-          setCurrentEvents(slides[prevSlideKey].events);
-          rotateToNext(currentIndex - 1);
-        },
-      });
+      if (mobileTextRef.current) {
+        gsap.to(mobileTextRef.current, {
+          opacity: 0,
+          y: 20,
+          duration: 0.5,
+          ease: "power2.in",
+        });
+      }
+
+      if (swiperRef.current) {
+        gsap.to(swiperRef.current, {
+          opacity: 0,
+          y: 20,
+          duration: 0.5,
+          ease: "power2.in",
+          onComplete: () => {
+            setCurrentSlide(prevSlideKey);
+            setCurrentEvents(slides[prevSlideKey].events);
+            rotateToNext(currentIndex - 1);
+          },
+        });
+      }
     }
   };
 
@@ -125,24 +132,28 @@ export const HistoricalDates: React.FC = () => {
         slides[nextSlideKey].numbers[1],
         setSecondNumber
       );
-      gsap.to(mobileTextRef.current, {
-        opacity: 0,
-        y: 20,
-        duration: 0.5,
-        ease: "power2.in",
-      });
 
-      gsap.to(swiperRef.current, {
-        opacity: 0,
-        y: 20,
-        duration: 0.5,
-        ease: "power2.in",
-        onComplete: () => {
-          setCurrentSlide(nextSlideKey);
-          setCurrentEvents(slides[nextSlideKey].events);
-          rotateToNext(currentIndex + 1);
-        },
-      });
+      if (mobileTextRef.current) {
+        gsap.to(mobileTextRef.current, {
+          opacity: 0,
+          y: 20,
+          duration: 0.5,
+          ease: "power2.in",
+        });
+      }
+      if (swiperRef.current) {
+        gsap.to(swiperRef.current, {
+          opacity: 0,
+          y: 20,
+          duration: 0.5,
+          ease: "power2.in",
+          onComplete: () => {
+            setCurrentSlide(nextSlideKey);
+            setCurrentEvents(slides[nextSlideKey].events);
+            rotateToNext(currentIndex + 1);
+          },
+        });
+      }
     }
   };
 
@@ -160,24 +171,27 @@ export const HistoricalDates: React.FC = () => {
       setSecondNumber
     );
 
-    gsap.to(mobileTextRef.current, {
-      opacity: 0,
-      y: 20,
-      duration: 0.5,
-      ease: "power2.in",
-    });
-
-    gsap.to(swiperRef.current, {
-      opacity: 0,
-      y: 20,
-      duration: 0.5,
-      ease: "power2.in",
-      onComplete: () => {
-        setCurrentSlide(slideKey);
-        setCurrentEvents(slides[slideKey].events);
-        rotateToNext(id);
-      },
-    });
+    if (mobileTextRef.current) {
+      gsap.to(mobileTextRef.current, {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        ease: "power2.in",
+      });
+    }
+    if (swiperRef.current) {
+      gsap.to(swiperRef.current, {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        ease: "power2.in",
+        onComplete: () => {
+          setCurrentSlide(slideKey);
+          setCurrentEvents(slides[slideKey].events);
+          rotateToNext(id);
+        },
+      });
+    }
   };
 
   useEffect(() => {
