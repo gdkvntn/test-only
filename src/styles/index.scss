@@ -7,6 +7,13 @@ body {
   font-size: 20px;
   line-height: 150%;
   color: #42567a;
-
+  // padding: 0 20px;
   background: $bg-color;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 14px;
+    line-height: 145%;
+  }
 }

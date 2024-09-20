@@ -1,6 +1,8 @@
+@import "./variables.scss";
+
 .slide {
   max-width: 320px;
-  height: 135px;
+
   h4 {
     color: rgb(56, 119, 238);
     font-family: Bebas Neue;
@@ -10,8 +12,57 @@
     letter-spacing: 0%;
     text-align: left;
     text-transform: uppercase;
+    @media screen and (max-width: 620px) {
+      font-size: 16px;
+    }
   }
   p {
     margin-top: 15px;
   }
+  @media screen and (max-width: 620px) {
+    max-width: 166px;
+  }
+}
+.swiper-button-next,
+.swiper-button-prev {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border-color: transparent;
+  transition: all 0.3s ease-in-out;
+  display: none;
+  cursor: pointer;
+  svg {
+    stroke: $color-blue;
+  }
+  &:hover {
+    opacity: 0.7;
+  }
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+}
+
+.active {
+  display: block;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+}
+.swiper-button-prev {
+  position: absolute;
+  top: 50%;
+  left: -50px;
+  transform: translateY(-50%);
+
+  svg {
+    transform: rotate(180deg);
+  }
+}
+.swiper-button-next {
+  position: absolute;
+  top: 50%;
+  right: -50px;
+  transform: translateY(-50%);
 }

@@ -1,5 +1,4 @@
-@import './variables.scss';
-
+@import "./variables.scss";
 
 .container {
   max-width: 1440px;
@@ -7,6 +6,9 @@
   border: 1px solid $color-border;
   border-bottom: none;
   border-top: none;
+  padding: 170px 0 104px 0;
+  @media screen and (max-width: 620px) {
+    padding: 60px 0 14px 0;
+    border: none;
+  }
 }
-
-

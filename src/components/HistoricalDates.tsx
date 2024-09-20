@@ -31,20 +31,25 @@ const formatPageNumber = (number: number) => {
   return String(number).padStart(2, "0");
 };
 
+const firstKey = Object.keys(slides)[0];
+
 export const HistoricalDates: React.FC = () => {
   const [firstNumber, setFirstNumber] = useState<number>(
-    slides["slide-1"].numbers[0]
+    slides[firstKey].numbers[0]
   );
   const [secondNumber, setSecondNumber] = useState<number>(
-    slides["slide-1"].numbers[1]
+    slides[firstKey].numbers[1]
   );
-  const [currentSlide, setCurrentSlide] = useState<string>("slide-1");
-  const [currentEvents, setCurrentEvents] = useState(slides["slide-1"].events);
+  const [currentSlide, setCurrentSlide] = useState<string>(firstKey);
+  const [currentEvents, setCurrentEvents] = useState(slides[firstKey].events);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [rotateAngle, setRotateAngle] = useState(0);
 
   const circleRef = useRef<HTMLDivElement>(null);
   const circleTextRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const swiperRef = useRef<HTMLDivElement>(null);
+  const firstRender = useRef<boolean>(true);
+  const mobileTextRef = useRef<HTMLDivElement>(null);
 
   const slideKeys = Object.keys(slides);
   const totalSlides = slideKeys.length;
@@ -85,10 +90,24 @@ export const HistoricalDates: React.FC = () => {
         slides[prevSlideKey].numbers[1],
         setSecondNumber
       );
+      gsap.to(mobileTextRef.current, {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        ease: "power2.in",
+      });
 
-      setCurrentSlide(prevSlideKey);
-      setCurrentEvents(slides[prevSlideKey].events);
-      rotateToNext(currentIndex - 1);
+      gsap.to(swiperRef.current, {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        ease: "power2.in",
+        onComplete: () => {
+          setCurrentSlide(prevSlideKey);
+          setCurrentEvents(slides[prevSlideKey].events);
+          rotateToNext(currentIndex - 1);
+        },
+      });
     }
   };
 
@@ -106,10 +125,24 @@ export const HistoricalDates: React.FC = () => {
         slides[nextSlideKey].numbers[1],
         setSecondNumber
       );
+      gsap.to(mobileTextRef.current, {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        ease: "power2.in",
+      });
 
-      setCurrentSlide(nextSlideKey);
-      setCurrentEvents(slides[nextSlideKey].events);
-      rotateToNext(currentIndex + 1);
+      gsap.to(swiperRef.current, {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        ease: "power2.in",
+        onComplete: () => {
+          setCurrentSlide(nextSlideKey);
+          setCurrentEvents(slides[nextSlideKey].events);
+          rotateToNext(currentIndex + 1);
+        },
+      });
     }
   };
 
@@ -126,9 +159,25 @@ export const HistoricalDates: React.FC = () => {
       slides[slideKey].numbers[1],
       setSecondNumber
     );
-    setCurrentSlide(slideKey);
-    setCurrentEvents(slides[slideKey].events);
-    rotateToNext(id);
+
+    gsap.to(mobileTextRef.current, {
+      opacity: 0,
+      y: 20,
+      duration: 0.5,
+      ease: "power2.in",
+    });
+
+    gsap.to(swiperRef.current, {
+      opacity: 0,
+      y: 20,
+      duration: 0.5,
+      ease: "power2.in",
+      onComplete: () => {
+        setCurrentSlide(slideKey);
+        setCurrentEvents(slides[slideKey].events);
+        rotateToNext(id);
+      },
+    });
   };
 
   useEffect(() => {
@@ -139,10 +188,43 @@ export const HistoricalDates: React.FC = () => {
       duration: 1,
       ease: "power2.inOut",
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+
+    if (swiperRef.current) {
+      gsap.to(swiperRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        delay: 0.3,
+        ease: "power2.out",
+      });
+    }
+
+    if (mobileTextRef.current) {
+      gsap.to(mobileTextRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        delay: 0.3,
+        ease: "power2.out",
+      });
+    }
+  }, [currentSlide]);
 
   return (
     <div className={styles.container}>
+      <div className={styles.divider}>
+        <div ref={mobileTextRef} className={styles["divider-mobile-name"]}>
+          {currentSlide}
+        </div>
+      </div>
       <div className={styles.title}>
         <h1>
           Исторические
@@ -165,8 +247,10 @@ export const HistoricalDates: React.FC = () => {
             if (!circleTextRefs.current[i]) {
               circleTextRefs.current[i] = null;
             }
+
             return (
               <div
+                key={el}
                 className={`${styles["circle-button"]} ${
                   isHovered ? styles.hovered : ""
                 }`}
@@ -207,9 +291,24 @@ export const HistoricalDates: React.FC = () => {
           >
             <Arrow />
           </button>
+          <div className={styles["pagination-mobile"]}>
+            {slideKeys.map((el, i) => {
+              return (
+                <div
+                  key={el + i}
+                  onClick={() => {
+                    changeSlide(i);
+                  }}
+                  className={`${styles["pagination-mobile-circle"]} ${
+                    currentIndex === i ? styles.active : ""
+                  }`}
+                ></div>
+              );
+            })}
+          </div>
         </div>
       </div>
-      <div className={styles["swiper-wrapper"]}>
+      <div ref={swiperRef} className={styles["swiper-wrapper"]}>
         <SwiperComponent data={currentEvents} />
       </div>
     </div>
